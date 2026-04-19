@@ -7,6 +7,7 @@
 
 float input[N][N];
 float output[N][N];
+float reconstructed[N][N];
 
 float alpha(int k) {
     if (k == 0)
@@ -78,7 +79,7 @@ void writePGM(const char *filename, float mat[N][N]) {
     fclose(file);
 }
 
-// DCT 2D
+// DCT-II 2D
 void dct2D() {
     for (int u = 0; u < N; u++) {
         for (int v = 0; v < N; v++) {
@@ -100,12 +101,38 @@ void dct2D() {
     }
 }
 
+// DCT-III 2D (Inversa da DCT-II)
+void idct2D() {
+    for (int x = 0; x < N; x++) {
+        for (int y = 0; y < N; y++) {
+
+            float sum = 0.0;
+
+            for (int u = 0; u < N; u++) {
+                for (int v = 0; v < N; v++) {
+
+                    float cos1 = cos(((2 * x + 1) * u * PI) / (2 * N));
+                    float cos2 = cos(((2 * y + 1) * v * PI) / (2 * N));
+
+                    sum += alpha(u) * alpha(v) * output[u][v] * cos1 * cos2;
+                }
+            }
+
+            reconstructed[x][y] = sum;
+        }
+    }
+}
+
 int main() {
     readPGM("input.pgm");
 
     dct2D();
 
+    idct2D();
+
     writePGM("output_dct.pgm", output);
+
+    writePGM("reconstructed.pgm", reconstructed);
 
     printf("DCT aplicada com sucesso! Veja output_dct.pgm\n");
 
