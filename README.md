@@ -52,3 +52,87 @@ Ela está presente apenas para motivos de teste, para que se possa reconstruir a
 ---
 
 **Curiosidade:** A DCT-II é a base do JPEG — é assim que a compressão descarta frequências invisíveis ao olho humano.
+
+---
+
+## Testes de Validação
+
+O arquivo `test_validation.c` implementa 4 testes matemáticos que provam que a DCT foi implementada corretamente.
+
+### 1. MSE (Mean Squared Error)
+
+**O que é:** Média do quadrado das diferenças entre cada pixel original e reconstruído.
+
+```c
+mse = Σ(input[i][j] - reconstructed[i][j])² / (N×N)
+```
+
+**Por que prova que funciona:**
+- A DCT-II e a DCT-III são **transformações matemáticas inversas** uma da outra
+- Se aplicar DCT → IDCT, deve recuperar a imagem original **perfeitamente**
+- Erro pequeno (~0.00000001) significa: `input ≈ reconstructed`
+- Erro grande = bug na implementação
+
+**Critério de sucesso:** MSE < 0.0001
+
+---
+
+### 2. Max Error (Erro Máximo Absoluto)
+
+**O que é:** Maior diferença absoluta entre qualquer pixel original e reconstruído.
+
+```c
+maxError = máximo de |input[i][j] - reconstructed[i][j]|
+```
+
+**Por que prova que funciona:**
+- MSE pode "esconder" erros grandes em poucos pixels se a maioria está certa
+- Max Error pega o **pior caso** de qualquer pixel
+- Se o pior erro é < 0.01, **todos** os pixels estão corretos
+- Garante que não há "outliers" com erro significativo
+
+---
+
+### 3. Análise de Energia
+
+**O que é:** Verifica se a energia está concentrada no coeficiente DC (propriedade matemática da DCT).
+
+| Componente | Significado | Esperado |
+|------------|-------------|----------|
+| **DC (0,0)** | Valor médio da imagem | Maior valor (energia concentrada) |
+| **AC** | Variações de frequência | Menores valores |
+
+**Por que prova que funciona:**
+- A DCT tem a propriedade de **compactação de energia**: a maioria da informação fica nos primeiros coeficientes
+- Se DC não for dominante, a transformação foi calculada errado
+- Isso é a base da compressão JPEG (descarta AC de alta frequência)
+
+---
+
+### 4. Comparação Pixel a Pixel
+
+**O que é:** Mostra os primeiros pixels lado a lado (original vs reconstruído).
+
+```
+12.00 -> 12.00 [0.0001] OK
+```
+
+**Por que prova que funciona:**
+- Visualização direta da reconstrução
+- Erro de [0.0001] é só **precisão de ponto flutuante**
+- Qualquer erro de implementação aparece imediatamente
+
+---
+
+### Resumo: Por que esses testes são suficientes?
+
+| Teste | O que valida |
+|-------|--------------|
+| **MSE** | A transformação inversa recupera a original (integridade matemática) |
+| **Max Error** | Nenhum pixel tem erro significativo (qualidade garantida) |
+| **Energia** | A DCT tem a propriedade física esperada (compactação) |
+| **Pixel** | Validação visual direta |
+
+**Se todos passam → A implementação está matematicamente correta.**
+
+A DCT-II transforma pixels em frequências. A DCT-III faz o caminho inverso. Se reconstruir a imagem original com erro ~0, a matemática foi implementada corretamente.
