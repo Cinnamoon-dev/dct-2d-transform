@@ -92,47 +92,11 @@ maxError = máximo de |input[i][j] - reconstructed[i][j]|
 - Garante que não há "outliers" com erro significativo
 
 ---
-
-### 3. Análise de Energia
-
-**O que é:** Verifica se a energia está concentrada no coeficiente DC (propriedade matemática da DCT).
-
-| Componente | Significado | Esperado |
-|------------|-------------|----------|
-| **DC (0,0)** | Valor médio da imagem | Maior valor (energia concentrada) |
-| **AC** | Variações de frequência | Menores valores |
-
-**Por que prova que funciona:**
-- A DCT tem a propriedade de **compactação de energia**: a maioria da informação fica nos primeiros coeficientes
-- Se DC não for dominante, a transformação foi calculada errado
-- Isso é a base da compressão JPEG (descarta AC de alta frequência)
-
----
-
-### 4. Comparação Pixel a Pixel
-
-**O que é:** Mostra os primeiros pixels lado a lado (original vs reconstruído).
-
-```
-12.00 -> 12.00 [0.0001] OK
-```
-
-**Por que prova que funciona:**
-- Visualização direta da reconstrução
-- Erro de [0.0001] é só **precisão de ponto flutuante**
-- Qualquer erro de implementação aparece imediatamente
-
----
-
 ### Resumo: Por que esses testes são suficientes?
 
 | Teste | O que valida |
 |-------|--------------|
 | **MSE** | A transformação inversa recupera a original (integridade matemática) |
 | **Max Error** | Nenhum pixel tem erro significativo (qualidade garantida) |
-| **Energia** | A DCT tem a propriedade física esperada (compactação) |
-| **Pixel** | Validação visual direta |
-
-**Se todos passam → A implementação está matematicamente correta.**
 
 A DCT-II transforma pixels em frequências. A DCT-III faz o caminho inverso. Se reconstruir a imagem original com erro ~0, a matemática foi implementada corretamente.

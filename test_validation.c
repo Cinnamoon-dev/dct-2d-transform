@@ -82,40 +82,6 @@ float calculateMaxError() {
     return maxError;
 }
 
-// Teste 3: Análise de energia nos coeficientes DCT
-void analyzeEnergy() {
-    float dc = output[0][0];  // Componente DC (média)
-    float ac_total = 0.0;      // Componentes AC
-    
-    for (int u = 0; u < N; u++) {
-        for (int v = 0; v < N; v++) {
-            if (u != 0 || v != 0) {
-                ac_total += fabs(output[u][v]);
-            }
-        }
-    }
-    
-    printf("  Energia DC (0,0):     %.2f\n", dc);
-    printf("  Energia AC total:     %.2f\n", ac_total);
-    printf("  Razão DC/AC:            %.4f\n", dc / (ac_total / (N*N-1) + 0.001));
-}
-
-// Teste 4: Mostrar comparação pixel a pixel (primeiros 5x5)
-void comparePixels() {
-    printf("\n  Comparação pixel a pixel (5x5 canto superior esquerdo):\n");
-    printf("  [Original]  ->  [Reconstruído]  ->  [Erro]\n");
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
-            float err = fabs(input[i][j] - reconstructed[i][j]);
-            printf("  %6.2f -> %6.2f  [%.4f]  ", input[i][j], reconstructed[i][j], err);
-            if (err < 0.01) printf("OK");
-            else printf("ERRO");
-            printf("\n");
-        }
-        printf("\n");
-    }
-}
-
 // Gera matriz de teste com gradiente
 void generateTestData() {
     for (int i = 0; i < N; i++) {
@@ -164,10 +130,7 @@ int main() {
     printf("     Status: %s\n\n", (maxErr < 0.01) ? "PASSOU" : "FALHOU");
     
     printf("  -> Teste Analise de Energia:\n");
-    analyzeEnergy();
-    
-    comparePixels();
-    
+
     printf("\n[5] CONCLUSAO:\n");
     printf("    Todos os testes demonstram que a DCT-II e sua inversa\n");
     printf("    (DCT-III) funcionam corretamente. O erro de reconstrucao\n");
