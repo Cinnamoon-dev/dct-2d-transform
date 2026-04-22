@@ -53,8 +53,6 @@ void readPGM(const char *filename) {
 // Escrita de PGM (P2)
 void writePGM(const char *filename, float mat[N][N]) {
     FILE *file = fopen(filename, "w");
-
-    FILE *file = fopen(filename, "w");
     if (!file) {
         printf("Erro ao criar arquivo %s\n", filename);
         exit(1);
