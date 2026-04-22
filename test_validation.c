@@ -129,8 +129,6 @@ int main() {
     printf("     Max Error = %.10f\n", maxErr);
     printf("     Status: %s\n\n", (maxErr < 0.01) ? "PASSOU" : "FALHOU");
     
-    printf("  -> Teste Analise de Energia:\n");
-
     printf("\n[5] CONCLUSAO:\n");
     printf("    Todos os testes demonstram que a DCT-II e sua inversa\n");
     printf("    (DCT-III) funcionam corretamente. O erro de reconstrucao\n");
