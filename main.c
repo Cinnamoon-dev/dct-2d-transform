@@ -54,6 +54,12 @@ void readPGM(const char *filename) {
 void writePGM(const char *filename, float mat[N][N]) {
     FILE *file = fopen(filename, "w");
 
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        printf("Erro ao criar arquivo %s\n", filename);
+        exit(1);
+    }
+
     fprintf(file, "P2\n");
     fprintf(file, "%d %d\n", N, N);
     fprintf(file, "255\n");
