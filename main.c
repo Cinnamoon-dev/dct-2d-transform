@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #define N 64
 #define PI 3.14159265358979323846
@@ -14,6 +15,23 @@ float alpha(int k) {
         return sqrt(1.0 / N);
     else
         return sqrt(2.0 / N);
+}
+
+void writeMatrix(float matrix[N][N], const char* filename) {
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        printf("Erro ao abrir arquivo.\n");
+        exit(1);
+    }
+    
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j < N; j++) {
+            fprintf(file, "%f ", matrix[i][j]);
+        }
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
 }
 
 // Leitura de PGM (P2)
@@ -133,6 +151,10 @@ int main() {
     dct2D();
 
     idct2D();
+
+    writeMatrix(output, "matriz.txt");
+    // usar o round() pra salvar
+    writeMatrix(reconstructed, "reoconstructed.txt");
 
     writePGM("output_dct.pgm", output);
 
