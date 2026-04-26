@@ -17,6 +17,27 @@ float alpha(int k) {
         return sqrt(2.0 / N);
 }
 
+void writeNewPicture(float matrix[N][N], const char* filename) {
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        printf("Erro ao abrir arquivo.\n");
+        exit(1);
+    }
+    
+    fprintf(file, "P2\n");
+    fprintf(file, "%d %d\n", N, N);
+    fprintf(file, "255\n");
+
+    for(int i = 0; i < N; i++) {
+        for(int j = 0; j < N; j++) {
+            fprintf(file, "%d ", (int) round(matrix[i][j]));
+        }
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
+}
+
 void writeMatrix(float matrix[N][N], const char* filename) {
     FILE *file = fopen(filename, "w");
     if (!file) {
@@ -146,21 +167,14 @@ void idct2D() {
 }
 
 int main() {
-    readPGM("input.pgm");
+    readPGM("mountain3.pgm");
 
     dct2D();
-
     idct2D();
 
-    writeMatrix(output, "matriz.txt");
-    // usar o round() pra salvar
-    writeMatrix(reconstructed, "reoconstructed.txt");
-
-    writePGM("output_dct.pgm", output);
-
-    writePGM("reconstructed.pgm", reconstructed);
+    writeMatrix(output, "output_dct.txt");
+    writeNewPicture(reconstructed, "reconstructed.pgm");
 
     printf("DCT aplicada com sucesso! Veja output_dct.pgm\n");
-
     return 0;
 }
