@@ -3,6 +3,7 @@
 #include <math.h>
 #include <string.h>
 
+#define Q 20.0
 #define N 64
 #define PI 3.14159265358979323846
 
@@ -122,6 +123,22 @@ void writePGM(const char *filename, float mat[N][N]) {
     fclose(file);
 }
 
+void quantize() {
+    for (int u = 0; u < N; u++) {
+        for (int v = 0; v < N; v++) {
+            output[u][v] = round(output[u][v] / Q);
+        }
+    }
+}
+
+void dequantize() {
+    for (int u = 0; u < N; u++) {
+        for (int v = 0; v < N; v++) {
+            output[u][v] = output[u][v] * Q;
+        }
+    }
+}
+
 // DCT-II 2D
 void dct2D() {
     for (int u = 0; u < N; u++) {
@@ -167,9 +184,13 @@ void idct2D() {
 }
 
 int main() {
-    readPGM("mountain3.pgm");
+    readPGM("input.pgm");
 
     dct2D();
+
+    quantize();
+    dequantize();
+
     idct2D();
 
     writeMatrix(output, "output_dct.txt");

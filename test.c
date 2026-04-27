@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 
+#define Q 20.0
 #define N 64
 #define PI 3.14159265358979323846
 
@@ -116,6 +117,22 @@ void comparePixels() {
     }
 }
 
+void quantize() {
+    for (int u = 0; u < N; u++) {
+        for (int v = 0; v < N; v++) {
+            output[u][v] = round(output[u][v] / Q);
+        }
+    }
+}
+
+void dequantize() {
+    for (int u = 0; u < N; u++) {
+        for (int v = 0; v < N; v++) {
+            output[u][v] = output[u][v] * Q;
+        }
+    }
+}
+
 // Gera matriz de teste com gradiente
 void generateTestData() {
     for (int i = 0; i < N; i++) {
@@ -143,6 +160,9 @@ int main() {
     printf("    Coeficiente DC (0,0) = %.2f (representa a media)\n", output[0][0]);
     printf("    Coeficiente AC (1,0) = %.2f (baixa frequencia horizontal)\n", output[1][0]);
     printf("    Coeficiente AC (0,1) = %.2f (baixa frequencia vertical)\n\n", output[0][1]);
+
+    quantize();
+    dequantize();
     
     // Execução IDCT
     printf("[3] EXECUCAO DCT-III (Inversa):\n");
