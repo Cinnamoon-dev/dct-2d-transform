@@ -23,7 +23,7 @@
  * =============================================================================
  * 
  * Este código foi desenvolvido para fins educacionais como parte da 
- * disciplina de Processamento de Imagens.
+ * disciplina de Sistemas Embarcados.
  * 
  * Permissões:
  * - Uso acadêmico: Livre para uso em atividades educacionais
